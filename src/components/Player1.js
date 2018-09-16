@@ -13,7 +13,7 @@ class Player1 extends Component {
       player2Ready
     } = this.props;
 
-    if (player2Ready && !gameInSession && currentGameId !== '') {
+    if (player2Ready) {
       alert('PLAYER DOS IS READY');
     }
 
