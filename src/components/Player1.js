@@ -14,12 +14,22 @@ class Player1 extends Component {
     return (
       <Wrapper className="App">
         <h3>PLAYER UNO</h3>
-        <button onClick={createNewGame.bind(this)}>Creat New Game</button>
-        <button onClick={startTimer.bind(this)}>Start Game</button>
-        <h3>
-          {currentGameId &&
-            `Player2 URL: ${window.location.href}game/${currentGameId}`}
-        </h3>
+        {currentGameId === '' ? (
+          <button onClick={createNewGame.bind(this)}>Creat New Game</button>
+        ) : (
+          !gameInSession && (
+            <button onClick={startTimer.bind(this)}>Start Game</button>
+          )
+        )}
+
+        {!gameInSession && (
+          <h3>
+            {currentGameId &&
+              `SHARE URL WITH PLAYER DOS: ${
+                window.location.href
+              }game/${currentGameId}`}
+          </h3>
+        )}
         {gameInSession && (
           <WordInput player="Player1" currentGameId={currentGameId} />
         )}
@@ -32,5 +42,5 @@ export default Player1;
 
 const Wrapper = styled.div`
   flex: 1;
-  background-color: red;
+  background-color: green;
 `;

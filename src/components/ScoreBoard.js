@@ -60,10 +60,10 @@ const Wrapper = styled.div`
 const WordList = styled.ul``;
 
 const Score = styled.div`
-  padding: 5px;
+  margin: 5px;
 `;
-const Scores = styled.div`
+const Scores = styled.h3`
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 5px;
 `;

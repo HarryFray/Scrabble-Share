@@ -20,7 +20,9 @@ class Player2 extends Component {
       <Wrapper className="App">
         <h3>PLAYER DOS</h3>
         {!this.state.isReady && (
-          <button onClick={this.handleReady.bind(this)}>I'm Ready!</button>
+          <button onClick={this.handleReady.bind(this)}>
+            LET PLAYER UNO KNOW YOUR READY
+          </button>
         )}
         {this.state.isReady &&
           gameInSession && (

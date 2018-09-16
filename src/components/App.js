@@ -78,8 +78,7 @@ class App extends Component {
         timerRef.set(newTime);
         if (newTime === 0) {
           clearInterval(countdown);
-          timerRef.set(60);
-          gameInSessionRef.set(false);
+          timerRef.set('GAME OVER');
         }
       });
     }, 1000);
