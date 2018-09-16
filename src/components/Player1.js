@@ -6,6 +6,7 @@ class Player1 extends Component {
   render() {
     return (
       <Wrapper className="App">
+        <button>StartGame</button>
         <h1>I'm Player Uno!</h1>
       </Wrapper>
     );
