@@ -15,16 +15,17 @@ class Player2 extends Component {
     this.setState({ isReady: true });
   }
   render() {
-    const { currentGameId } = this.props;
+    const { currentGameId, gameInSession } = this.props;
     return (
       <Wrapper className="App">
         <h3>PLAYER DOS</h3>
         {!this.state.isReady && (
           <button onClick={this.handleReady.bind(this)}>I'm Ready!</button>
         )}
-        {this.state.isReady && (
-          <WordInput player="Player2" currentGameId={currentGameId} />
-        )}
+        {this.state.isReady &&
+          gameInSession && (
+            <WordInput player="Player2" currentGameId={currentGameId} />
+          )}
       </Wrapper>
     );
   }

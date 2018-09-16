@@ -5,7 +5,12 @@ import WordInput from './WordInput';
 
 class Player1 extends Component {
   render() {
-    const { currentGameId, createNewGame, startTimer } = this.props;
+    const {
+      currentGameId,
+      createNewGame,
+      startTimer,
+      gameInSession
+    } = this.props;
     return (
       <Wrapper className="App">
         <h3>PLAYER UNO</h3>
@@ -15,7 +20,9 @@ class Player1 extends Component {
           {currentGameId &&
             `Player2 URL: ${window.location.href}game/${currentGameId}`}
         </h3>
-        <WordInput player="Player1" currentGameId={currentGameId} />
+        {gameInSession && (
+          <WordInput player="Player1" currentGameId={currentGameId} />
+        )}
       </Wrapper>
     );
   }

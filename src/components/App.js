@@ -15,28 +15,34 @@ class App extends Component {
       time: 60,
       currentGameId: '',
       gameLetters: '',
-      isPlayer1: true
+      isPlayer1: true,
+      gameInSession: false
     };
-
-    this.gameRef = database.ref().child(`/${this.state.currentGameId}`);
-    this.timerRef = this.gameRef.child('/timer');
   }
+
   componentDidMount() {
-    // logic for who is playing
-    this.timerRef.set(60);
     let url = window.location.href;
     let gameId = url.slice(url.indexOf('game') + 5);
     if (url.includes('game')) {
-      this.setState({
-        isPlayer1: false,
-        currentGameId: gameId,
-        gameLetters: gameId.toUpperCase()
-      });
-    }
+      this.setState(
+        {
+          isPlayer1: false,
+          currentGameId: gameId,
+          gameLetters: gameId.toUpperCase()
+        },
+        () => {
+          let gameRef = database.ref().child(`/${this.state.currentGameId}`);
+          let timerRef = gameRef.child('/timer');
+          gameRef.child('/gameInSession').on('value', gameInSession => {
+            this.setState({ gameInSession: gameInSession.val() });
+          });
 
-    this.timerRef.on('value', time => {
-      this.setState({ time: time.val() });
-    });
+          timerRef.on('value', time => {
+            this.setState({ time: time.val() });
+          });
+        }
+      );
+    }
   }
 
   handleCreateNewGame() {
@@ -50,15 +56,30 @@ class App extends Component {
   }
 
   handleStartTimer() {
+    let gameRef = database.ref().child(`/${this.state.currentGameId}`);
+    let timerRef = gameRef.child('/timer');
+    let gameInSessionRef = gameRef.child('/gameInSession');
+
+    timerRef.set(60);
+    timerRef.on('value', time => {
+      this.setState({ time: time.val() });
+    });
+
+    gameRef.child('/gameInSession').on('value', gameInSession => {
+      this.setState({ gameInSession: gameInSession.val() });
+    });
+
+    gameInSessionRef.set(true);
     this.setState({ gameLetters: this.state.currentGameId.toUpperCase() });
-    this.timerRef.set(60);
+    timerRef.set(60);
     var countdown = setInterval(() => {
-      this.timerRef.once('value', time => {
+      timerRef.once('value', time => {
         let newTime = time.val() - 1;
-        this.timerRef.set(newTime);
+        timerRef.set(newTime);
         if (newTime === 0) {
           clearInterval(countdown);
-          this.timerRef.set(60);
+          timerRef.set(60);
+          gameInSessionRef.set(false);
         }
       });
     }, 1000);
@@ -78,9 +99,13 @@ class App extends Component {
               currentGameId={this.state.currentGameId}
               startTimer={this.handleStartTimer.bind(this)}
               createNewGame={this.handleCreateNewGame.bind(this)}
+              gameInSession={this.state.gameInSession}
             />
           ) : (
-            <Player2 currentGameId={this.state.currentGameId} />
+            <Player2
+              currentGameId={this.state.currentGameId}
+              gameInSession={this.state.gameInSession}
+            />
           )}
 
           <ScoreBoard currentGameId={this.state.currentGameId} />

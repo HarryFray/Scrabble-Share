@@ -12,7 +12,7 @@ class WordInput extends Component {
     };
   }
 
-  handleEnter(e) {
+  handleEnterWord(e) {
     this.updateUsedWords();
     if (e.key === 'Enter') {
       let inputVal = this.input.value.toUpperCase();
@@ -47,7 +47,7 @@ class WordInput extends Component {
           type="text"
           placeholder="Word"
           ref={input => (this.input = input)}
-          onKeyPress={this.handleEnter.bind(this)}
+          onKeyPress={this.handleEnterWord.bind(this)}
         />
       </Wrapper>
     );
