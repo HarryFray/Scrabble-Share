@@ -14,6 +14,7 @@ class ScoreBoard extends Component {
     };
   }
 
+  // on game starting listens for new words in firebase
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       database
@@ -39,12 +40,11 @@ class ScoreBoard extends Component {
           <Score>{`UNO: ${this.state.player1Score}`}</Score>
           <Score>{`DOS: ${this.state.player2Score}`}</Score>
         </Scores>
-
-        <WordList>
+        <ul>
           {this.state.allWords.map(word => {
             return <li key={word.word}>{`${word.player}: ${word.word}`}</li>;
           })}
-        </WordList>
+        </ul>
       </Wrapper>
     );
   }
@@ -56,8 +56,6 @@ const Wrapper = styled.div`
   flex: 1;
   background-color: white;
 `;
-
-const WordList = styled.ul``;
 
 const Score = styled.div`
   margin: 5px;

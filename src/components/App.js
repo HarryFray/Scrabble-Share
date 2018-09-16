@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
-import Player1 from './Player1';
-import Player2 from './Player2';
-
-import ScoreBoard from './ScoreBoard';
 import styled from 'styled-components';
 import { database } from '../utils/firebase';
 import { generateRandomLetters } from '../utils/gameLogic';
+
+import Player1 from './Player1';
+import Player2 from './Player2';
+import ScoreBoard from './ScoreBoard';
 
 class App extends Component {
   constructor(props) {
@@ -21,6 +21,7 @@ class App extends Component {
     };
   }
 
+  // Finding and setting up game for player 2
   componentDidMount() {
     let url = window.location.href;
     let gameId = url.slice(url.indexOf('game') + 5);
@@ -46,8 +47,8 @@ class App extends Component {
     }
   }
 
+  // creates game in local state
   handleCreateNewGame() {
-    // creates game in local state
     let letters = generateRandomLetters();
     let key = letters.join('').toLowerCase();
     database
@@ -66,9 +67,10 @@ class App extends Component {
   }
 
   handleStartTimer() {
+    this.setState({ player2Ready: false });
     let gameRef = database.ref().child(`/${this.state.currentGameId}`);
 
-    // sets game is session to true
+    // sets game in session to true
     let gameInSessionRef = gameRef.child('/gameInSession');
     gameRef.child('/gameInSession').on('value', gameInSession => {
       this.setState({ gameInSession: gameInSession.val() });
@@ -87,10 +89,12 @@ class App extends Component {
       timerRef.once('value', time => {
         let newTime = time.val() - 1;
         timerRef.set(newTime);
+        // on game ending
         if (newTime === 0) {
           clearInterval(countdown);
           timerRef.set('GAME OVER');
           gameInSessionRef.set(false);
+          this.setState({ currentGameId: '' });
         }
       });
     }, 1000);

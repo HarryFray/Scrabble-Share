@@ -13,7 +13,7 @@ class WordInput extends Component {
   }
 
   handleEnterWord(e) {
-    this.updateUsedWords();
+    this.checkForNewWords();
     if (e.key === 'Enter') {
       let inputVal = this.input.value.toUpperCase();
       let { currentGameId } = this.props;
@@ -29,7 +29,7 @@ class WordInput extends Component {
     }
   }
 
-  updateUsedWords() {
+  checkForNewWords() {
     database.ref(`/${this.props.currentGameId}/words`).on('value', snapshot => {
       if (snapshot.val()) {
         let existingWords = Object.values(snapshot.val()).map(

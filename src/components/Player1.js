@@ -13,7 +13,7 @@ class Player1 extends Component {
       player2Ready
     } = this.props;
 
-    if (player2Ready === true && !gameInSession) {
+    if (player2Ready && !gameInSession && currentGameId !== '') {
       alert('PLAYER DOS IS READY');
     }
 
@@ -28,18 +28,18 @@ class Player1 extends Component {
             <button onClick={startTimer.bind(this)}>Start Game</button>
           )
         )}
-
-        {!gameInSession && (
-          <h3>
-            {currentGameId &&
-              `SHARE URL WITH PLAYER DOS: ${
+        {!gameInSession &&
+          currentGameId && (
+            <h3>
+              {`SHARE URL WITH PLAYER DOS: ${
                 window.location.href
               }game/${currentGameId}`}
-          </h3>
-        )}
-        {gameInSession && (
-          <WordInput player="Player1" currentGameId={currentGameId} />
-        )}
+            </h3>
+          )}
+        {gameInSession &&
+          currentGameId && (
+            <WordInput player="Player1" currentGameId={currentGameId} />
+          )}
       </Wrapper>
     );
   }
