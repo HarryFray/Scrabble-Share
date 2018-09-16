@@ -22,7 +22,7 @@ export function generateRandomLetters() {
 
 export function checkIfWordInLetters(word, letters) {
   let bigWord = word.toUpperCase();
-  let tempLetters = letters.join('');
+  let tempLetters = letters.toUpperCase();
   for (let i = 0; i < word.length; i++) {
     let current = bigWord[i];
     if (!tempLetters.includes(current)) {
