@@ -9,15 +9,22 @@ class Player1 extends Component {
       currentGameId,
       createNewGame,
       startTimer,
-      gameInSession
+      gameInSession,
+      player2Ready
     } = this.props;
+
+    if (player2Ready === true && !gameInSession) {
+      alert('PLAYER DOS IS READY');
+    }
+
     return (
       <Wrapper className="App">
         <h3>PLAYER UNO</h3>
         {currentGameId === '' ? (
           <button onClick={createNewGame.bind(this)}>Creat New Game</button>
         ) : (
-          !gameInSession && (
+          !gameInSession &&
+          player2Ready && (
             <button onClick={startTimer.bind(this)}>Start Game</button>
           )
         )}

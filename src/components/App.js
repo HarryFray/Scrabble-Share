@@ -16,7 +16,8 @@ class App extends Component {
       currentGameId: '',
       gameLetters: '',
       isPlayer1: true,
-      gameInSession: false
+      gameInSession: false,
+      player2Ready: false
     };
   }
 
@@ -46,31 +47,41 @@ class App extends Component {
   }
 
   handleCreateNewGame() {
+    // creates game in local state
     let letters = generateRandomLetters();
     let key = letters.join('').toLowerCase();
     database
       .ref()
       .child(key)
       .push(letters);
-    this.setState({ currentGameId: key });
+    this.setState({ currentGameId: key }, () => {
+      // adds game to firebase and handles if player 2 is ready
+      let gameRef = database.ref().child(`/${this.state.currentGameId}`);
+      let player2ReadyRef = gameRef.child('/player2Ready');
+      player2ReadyRef.set(false);
+      player2ReadyRef.on('value', player2Ready => {
+        this.setState({ player2Ready: player2Ready.val() });
+      });
+    });
   }
 
   handleStartTimer() {
     let gameRef = database.ref().child(`/${this.state.currentGameId}`);
-    let timerRef = gameRef.child('/timer');
-    let gameInSessionRef = gameRef.child('/gameInSession');
 
+    // sets game is session to true
+    let gameInSessionRef = gameRef.child('/gameInSession');
+    gameRef.child('/gameInSession').on('value', gameInSession => {
+      this.setState({ gameInSession: gameInSession.val() });
+    });
+    gameInSessionRef.set(true);
+    this.setState({ gameLetters: this.state.currentGameId.toUpperCase() });
+
+    // creates and starts timer
+    let timerRef = gameRef.child('/timer');
     timerRef.set(60);
     timerRef.on('value', time => {
       this.setState({ time: time.val() });
     });
-
-    gameRef.child('/gameInSession').on('value', gameInSession => {
-      this.setState({ gameInSession: gameInSession.val() });
-    });
-
-    gameInSessionRef.set(true);
-    this.setState({ gameLetters: this.state.currentGameId.toUpperCase() });
     timerRef.set(60);
     var countdown = setInterval(() => {
       timerRef.once('value', time => {
@@ -79,6 +90,7 @@ class App extends Component {
         if (newTime === 0) {
           clearInterval(countdown);
           timerRef.set('GAME OVER');
+          gameInSessionRef.set(false);
         }
       });
     }, 1000);
@@ -90,7 +102,7 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">Welcome to Scrabble</h1>
           <h2>{this.state.time}</h2>
-          <h2>{this.state.gameLetters}</h2>
+          {this.state.gameInSession && <h2>{this.state.gameLetters}</h2>}
         </header>
         <Content>
           {this.state.isPlayer1 ? (
@@ -99,6 +111,7 @@ class App extends Component {
               startTimer={this.handleStartTimer.bind(this)}
               createNewGame={this.handleCreateNewGame.bind(this)}
               gameInSession={this.state.gameInSession}
+              player2Ready={this.state.player2Ready}
             />
           ) : (
             <Player2
@@ -106,7 +119,6 @@ class App extends Component {
               gameInSession={this.state.gameInSession}
             />
           )}
-
           <ScoreBoard currentGameId={this.state.currentGameId} />
         </Content>
       </div>

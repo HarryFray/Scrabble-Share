@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import styled from 'styled-components';
 import WordInput from './WordInput';
+import { database } from '../utils/firebase';
 
 class Player2 extends Component {
   constructor() {
@@ -13,7 +14,9 @@ class Player2 extends Component {
 
   handleReady() {
     this.setState({ isReady: true });
+    database.ref(`/${this.props.currentGameId}/player2Ready`).set(true);
   }
+
   render() {
     const { currentGameId, gameInSession } = this.props;
     return (

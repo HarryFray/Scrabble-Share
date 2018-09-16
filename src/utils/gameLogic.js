@@ -4,8 +4,8 @@ export function getRandomLetter(chars) {
 }
 
 export function generateRandomLetters() {
-  let consonants = 'BCDFGHJKLMNPQRSTVWXZ';
-  let vowels = 'AEIOUY';
+  let consonants = 'YBCDFGHJKLMNPQRSTVWXZ';
+  let vowels = 'AEIOU';
   let allLetters = vowels + consonants;
   let letters = [];
   for (let i = 0; i < 9; i++) {
