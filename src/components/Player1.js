@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import './App.css';
 import styled from 'styled-components';
+import WordInput from './WordInput';
 
 class Player1 extends Component {
   render() {
-    const { currentGameId } = this.props;
+    const { currentGameId, createNewGame, startTimer } = this.props;
     return (
       <Wrapper className="App">
-        <button>Creat New Game</button>
-        <h1>I'm Player Uno!</h1>
+        <button onClick={createNewGame.bind(this)}>Creat New Game</button>
+        <button onClick={startTimer.bind(this)}>Start Game</button>
         <h3>
-          {currentGameId && `${window.location.href}game/${currentGameId}`}
+          {currentGameId &&
+            `Player2 URL: ${window.location.href}game/${currentGameId}`}
         </h3>
+        <WordInput />
       </Wrapper>
     );
   }
