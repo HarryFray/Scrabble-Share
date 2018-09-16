@@ -6,25 +6,39 @@ import Player2 from './Player2';
 import ScoreBoard from './ScoreBoard';
 import styled from 'styled-components';
 import { database } from '../utils/firebase';
-
-import { Route } from 'react-router-dom';
+import { generateRandomLetters } from '../utils/gameLogic';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      time: 60
+      time: 60,
+      currentGameId: '',
+      isPlayer1: true
     };
 
     this.timerRef = database.ref('/time');
   }
   componentDidMount() {
+    let url = window.location.href;
+    if (url.includes('game')) {
+      this.setState({
+        isPlayer1: false,
+        currentGameId: url.slice(url.indexOf('game') + 5)
+      });
+    }
+  }
+
+  handleCreateNewGame() {
+    let letters = generateRandomLetters();
+    let key = letters.join('').toLowerCase();
     database
       .ref()
-      .child('/time')
-      .on('value', snapshot => {
-        this.setState({ time: snapshot.val() });
-      });
+      .child('/games')
+      .child(key)
+      .push(letters);
+
+    this.setState({ currentGameId: key });
   }
 
   handleStartTimer() {
@@ -50,11 +64,17 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">Welcome to Scrabble</h1>
           <h2>{this.state.time}</h2>
+          <h2>{this.state.currentGameId.toUpperCase()}</h2>
         </header>
-        <button onClick={this.handleStartTimer.bind(this)}>test timer</button>
+        <button onClick={this.handleCreateNewGame.bind(this)}>
+          test button
+        </button>
         <Content>
-          <Route exact path="/" component={Player1} />
-          <Route exact path="/player2" component={Player2} />
+          {this.state.isPlayer1 ? (
+            <Player1 currentGameId={this.state.currentGameId} />
+          ) : (
+            <Player2 />
+          )}
           <ScoreBoard />
         </Content>
       </div>
