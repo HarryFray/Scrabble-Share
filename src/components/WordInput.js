@@ -7,13 +7,13 @@ import { checkIfWordInLetters } from '../utils/gameLogic';
 class WordInput extends Component {
   constructor(props) {
     super(props);
-    this.wordRef = database.ref(`/games/${this.props.currentGameId}`);
   }
 
   handleEnter(e) {
     if (e.key === 'Enter') {
-      console.log(this.props.currentGameId);
-      this.wordRef.push({ player: this.props.player, word: this.input.value });
+      database
+        .ref(`/${this.props.currentGameId}/words`)
+        .push({ player: this.props.player, word: this.input.value });
       this.input.value = '';
     }
   }

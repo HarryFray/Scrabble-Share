@@ -8,6 +8,7 @@ class Player1 extends Component {
     const { currentGameId, createNewGame, startTimer } = this.props;
     return (
       <Wrapper className="App">
+        <h3>Player UNO</h3>
         <button onClick={createNewGame.bind(this)}>Creat New Game</button>
         <button onClick={startTimer.bind(this)}>Start Game</button>
         <h3>

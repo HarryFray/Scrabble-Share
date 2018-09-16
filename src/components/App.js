@@ -18,11 +18,7 @@ class App extends Component {
       isPlayer1: true
     };
 
-    this.gameRef = database
-      .ref()
-      .child('/games')
-      .child(`/${this.state.currentGameId}`);
-
+    this.gameRef = database.ref().child(`/${this.state.currentGameId}`);
     this.timerRef = this.gameRef.child('/timer');
   }
   componentDidMount() {
@@ -48,7 +44,6 @@ class App extends Component {
     let key = letters.join('').toLowerCase();
     database
       .ref()
-      .child('/games')
       .child(key)
       .push(letters);
     this.setState({ currentGameId: key });
@@ -87,7 +82,8 @@ class App extends Component {
           ) : (
             <Player2 currentGameId={this.state.currentGameId} />
           )}
-          <ScoreBoard />
+
+          <ScoreBoard currentGameId={this.state.currentGameId} />
         </Content>
       </div>
     );

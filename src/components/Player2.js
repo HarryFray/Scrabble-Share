@@ -18,6 +18,7 @@ class Player2 extends Component {
     const { currentGameId } = this.props;
     return (
       <Wrapper className="App">
+        <h3>Player DOS</h3>
         {!this.state.isReady && (
           <button onClick={this.handleReady.bind(this)}>I'm Ready!</button>
         )}
