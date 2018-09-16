@@ -22,8 +22,14 @@ export function generateRandomLetters() {
 
 export function checkIfWordInLetters(word, letters) {
   let bigWord = word.toUpperCase();
+  let tempLetters = letters.join('');
   for (let i = 0; i < word.length; i++) {
-    if (!letters.includes(bigWord[i])) return false;
+    let current = bigWord[i];
+    if (!tempLetters.includes(current)) {
+      return false;
+    }
+    var regex = new RegExp(current);
+    tempLetters = tempLetters.replace(regex, '');
   }
   return true;
 }

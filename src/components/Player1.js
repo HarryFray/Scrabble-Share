@@ -14,7 +14,7 @@ class Player1 extends Component {
           {currentGameId &&
             `Player2 URL: ${window.location.href}game/${currentGameId}`}
         </h3>
-        <WordInput />
+        <WordInput player="Player1" currentGameId={currentGameId} />
       </Wrapper>
     );
   }

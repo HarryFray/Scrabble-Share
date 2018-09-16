@@ -26,12 +26,15 @@ class App extends Component {
     this.timerRef = this.gameRef.child('/timer');
   }
   componentDidMount() {
+    // logic for who is playing
     this.timerRef.set(60);
     let url = window.location.href;
+    let gameId = url.slice(url.indexOf('game') + 5);
     if (url.includes('game')) {
       this.setState({
         isPlayer1: false,
-        currentGameId: url.slice(url.indexOf('game') + 5)
+        currentGameId: gameId,
+        gameLetters: gameId.toUpperCase()
       });
     }
 
@@ -48,7 +51,6 @@ class App extends Component {
       .child('/games')
       .child(key)
       .push(letters);
-
     this.setState({ currentGameId: key });
   }
 
@@ -83,7 +85,7 @@ class App extends Component {
               createNewGame={this.handleCreateNewGame.bind(this)}
             />
           ) : (
-            <Player2 />
+            <Player2 currentGameId={this.state.currentGameId} />
           )}
           <ScoreBoard />
         </Content>
